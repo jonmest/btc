@@ -23,7 +23,7 @@ class Wallet {
      */
     constructor (ownerId, hashedPassword) {
         const ck = new CoinKey.createRandom()
-        const privateKey = Buffer.from(ck.privateKey)
+        const privateKey = ck.privateKey
         this.ivForPrivateKey = crypto.randomBytes(16)
 
         this.privateKeyEncrypted = encrypt(privateKey, this.ivForPrivateKey).toString('hex')
@@ -53,6 +53,7 @@ function encrypt (buf, iv) {
 }
 
 function decrypt (buf, iv) {
+    console.log(algorithm + "\n" + key + "\n" + iv)
     const decipher = crypto.createDecipheriv(algorithm, key, iv)
     let decrypted = decipher.update(buf)
     decrypted = Buffer.concat([decrypted, decipher.final()])

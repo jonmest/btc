@@ -4,13 +4,13 @@ const encrypt = require('./quickEncrypt.js')
 
 class Account {
     constructor (first, last, idNumber, password) {
-        this.id = encrypt(first.concat(this.last, idNumber))
 
         this.firstName = first
         this.lastName = last
         this.idNumber = idNumber
 
         this.hashedPassword = sha256Hasher(password)
+        this.id = encrypt(first.concat(this.last, this.hashedPassword))
         this.wallet = new Wallet(this.id, this.hashedPassword)
     }
 
