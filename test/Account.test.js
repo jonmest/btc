@@ -33,6 +33,19 @@ test('if account wallet can be made from WIF', () => {
     expect(accountFromWIF.wallet.getPrivateKey(password, accountFromWIF.salt)).toEqual('cSWvrS4KGvnn8RrMNZraCQT4hoqBY99UgB4xbD1EAAYGTibqaRPz')
 })
 
-test('if address P2PKH address starts with a 1 (real network)', () => {
+test('if address P2PKH address NOT starts with a 1 (real network)', () => {
     expect(false).toEqual(account.wallet.address.startsWith('1'))
+})
+
+test('if we can check balance on empty wallet', async() => {
+      const balance = await account.wallet.getBalance()
+      expect(await balance).toEqual(0)
+      expect(await balance).toBeDefined()
+})
+
+test('if we can check balance on funded wallet', async () => {
+    const accountFromWIF = new Account("Erik", "Karlsson", "0006188296", password, 'cT4S5cy8aZSF22ir3AuWYYtnKt8MX11tsKkR3AY7JPNjp5xmz9Fh')
+    const balance = accountFromWIF.wallet.getBalance()
+    expect(await balance).toBeDefined()
+    expect(await balance).not.toEqual(0)
 })

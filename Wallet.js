@@ -25,6 +25,8 @@ const Btc = require('bitcoinjs-lib')
 const TestNet = Btc.networks.testnet
 
 
+const fetch = require('node-fetch')
+
 class Wallet {
     /**
      * @param {string} ownerId
@@ -67,6 +69,15 @@ class Wallet {
         } else {
             throw new Error('Incorrect password')
         }
+    }
+
+    async getBalance () {
+        const apiUrl = 'https://api.blockcypher.com/v1/btc/test3/addrs/' + this.address
+        console.log(apiUrl)
+        const response = await fetch(apiUrl);
+        const myJson = await response.json()
+        return myJson.balance
+        
     }
 }
 
