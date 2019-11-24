@@ -18,9 +18,6 @@ test('if wallet has private, public key and address', () => {
     expect(account.wallet.privateKey).toBeDefined()
     expect(account.wallet.address).toBeDefined()
 
-    console.log("Private key: " + account.wallet.privateKey)
-    console.log("Public key: " + account.wallet.publicKey)
-    console.log("Address: " + account.wallet.address)
 })
 
 test('is private key is encrypted and decrypted properly', () => {
@@ -48,4 +45,11 @@ test('if we can check balance on funded wallet', async () => {
     const balance = accountFromWIF.wallet.getBalance()
     expect(await balance).toBeDefined()
     expect(await balance).not.toEqual(0)
+})
+
+test('if we can fetch last transaction', async () => {
+    const accountFromWIF = new Account("Erik", "Karlsson", "0006188296", password, 'cT4S5cy8aZSF22ir3AuWYYtnKt8MX11tsKkR3AY7JPNjp5xmz9Fh')
+    const lastTransaction = accountFromWIF.wallet.lastTransaction()
+    expect(await lastTransaction).toBeDefined()
+    expect(await typeof lastTransaction).toEqual('object')
 })

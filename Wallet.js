@@ -73,11 +73,18 @@ class Wallet {
 
     async getBalance () {
         const apiUrl = 'https://api.blockcypher.com/v1/btc/test3/addrs/' + this.address
-        console.log(apiUrl)
         const response = await fetch(apiUrl);
         const myJson = await response.json()
         return myJson.balance
         
+    }
+
+    async lastTransaction () {
+        const apiUrl = 'https://api.blockcypher.com/v1/btc/test3/addrs/' + this.address
+        const response = await fetch(apiUrl)
+        const myJson = await response.json()
+        const lastTx = myJson.txrefs[0]
+        return lastTx
     }
 }
 

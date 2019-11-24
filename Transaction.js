@@ -1,21 +1,38 @@
 const Btc = require('bitcoinjs-lib')
 const TestNet = Btc.networks.testnet
-const tx = new Btc.TransactionBuilder(TestNet)
 const Account = require('./Account.js')
 const Wallet = require('./Wallet.js')
 
-const password = 'Hejallihopa'
+
+class Transaction {
+    constructor (sender, receiver, amountSatoshis) {
+        this.sender = sender
+        this.receiver = receiver
+        this.amount = amountSatoshis
+        this.txb = new Btc.TransactionBuilder(TestNet)
+
+        this.transaction = this.createTransaction()
+ 
+    }
+
+    async createTransaction () {
+        this.senderLastTransaction = await this.sender.wallet.lastTransaction()
+        const lastHash = await this.senderLastTransaction.tx_hash
+        const lastOutN = await this.senderLastTransaction.tx_output_n
+
+        this.txb.addInput(await lastHash, await lastOutN)
+
+        this.txb.addOutput(await this.receiver.wallet.address, this.amount)
+
+        const keyPair = Btc.ECPair.fromWIF(this.sender.wallet.privateKey, TestNet)
+        this.txb.sign(0, keyPair)
 
 
-const account1 = new Account("Jon", "Mester", "0006188296", password)
-const account2 = new Account("Erik", "Feliz", "0002488296", password)
+        const transaction = this.txb.build()
+        console.log(transaction.toHex())
+        return transaction.toHex()
+    }
 
-const wallet1 = account1.wallet
-const wallet2 = account2.wallet
+}
 
-let amountWeHave = 3306
-let amountToKeep = 3000
-
-let transactionFee = 100
-
-let amountToSend = amountWeHave - amountToKeep - transactionFee
+module.exports = Transaction
