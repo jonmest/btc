@@ -7,6 +7,7 @@ beforeEach(() => {
 })
 
 test('if account exists', () => {
+    const account2 = new Account("Erik", "Karlsson", "200061782", password)
     expect(account).toBeDefined()
 })
 

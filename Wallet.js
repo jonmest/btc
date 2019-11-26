@@ -26,6 +26,7 @@ const TestNet = Btc.networks.testnet
 
 
 const fetch = require('node-fetch')
+const request = require('request-promise-native')
 
 class Wallet {
     /**
@@ -74,6 +75,7 @@ class Wallet {
     async getBalance () {
         const apiUrl = 'https://api.blockcypher.com/v1/btc/test3/addrs/' + this.address
         const response = await fetch(apiUrl);
+        
         const myJson = await response.json()
         return myJson.balance
         
@@ -85,6 +87,14 @@ class Wallet {
         const myJson = await response.json()
         const lastTx = myJson.txrefs[0]
         return lastTx
+    }
+
+    async getAllUnspentInputs () {
+        const apiUrl = 'https://api.blockcypher.com/v1/btc/test3/addrs/' + this.address
+        const response = await fetch(apiUrl)
+        const myJson = await response.json()
+        const unspentInputs = myJson.txrefs.filter(a => a.spent === false)
+        return unspentInputs
     }
 }
 
